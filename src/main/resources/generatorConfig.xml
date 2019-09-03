@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="MysqlContext" targetRuntime="MyBatis3"
+             defaultModelType="flat">
+        <property name="beginningDelimiter" value="`" />
+        <property name="endingDelimiter" value="`" />
+        <plugin type="cc.bandaotixi.plugins.OneToManyPlugin"></plugin>
+        <!-- 生成一对一配置 -->
+        <plugin type="cc.bandaotixi.plugins.OneToOnePlugin" />
+<!--        &lt;!&ndash; 生成一对多配置 &ndash;&gt;-->
+<!--        <plugin type="com.bandaotixi.plugins.OneToManyPlugin" />-->
+<!--        &lt;!&ndash; 生成批量配置 &ndash;&gt;-->
+<!--        <plugin type="cc.bandaotixi.plugins.BatchInsertPlugin" />-->
+<!--        <plugin type="cc.bandaotixi.plugins.BatchUpdatePlugin" />-->
+
+        <!-- 生成注释配置 -->
+        <commentGenerator type="cc.bandaotixi.plugins.BDTCommentGenerator">
+            <property name="javaFileEncoding" value="GB2312"/>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!-- 数据库连接配置 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/tag_meta_db?serverTimezone=UTC"
+                        userId="root"
+                        password="yehang0201">
+        </jdbcConnection>
+
+        <!-- 实体类配置 -->
+        <javaModelGenerator targetPackage="com.example.demoMysql.bean"
+                            targetProject="src/main/java">
+            <property name="trimStrings" value="true" />
+            <property name="enableSubPackages" value="true" />
+        </javaModelGenerator>
+
+        <!-- mapper.xml配置 -->
+        <sqlMapGenerator targetPackage="mapping" targetProject="src/main/resources" />
+
+        <!-- mapper.java配置 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.example.demoMysql.dao"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaClientGenerator>
+<!--        &lt;!&ndash; 父表配置&ndash;&gt;-->
+<!--        <table tableName="category" mapperName="CategoryMapper" domainObjectName="Category">-->
+<!--            <generatedKey column="Id" sqlStatement="MySql"  identity="true"/>-->
+<!--            <oneToMany mappingTable="product" column="categoryId" joinColumn="id"/>-->
+<!--        </table>-->
+<!--        &lt;!&ndash; 子表配置&ndash;&gt;-->
+<!--        <table tableName="product" domainObjectName="Product">-->
+<!--            <generatedKey column="Id" sqlStatement="MySql" identity="true" />-->
+<!--        </table>-->
+        <table tableName="parent_kind" mapperName="ParentKindMapper" domainObjectName="ParentKind">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <oneToMany mappingTable="kind" column="id" joinColumn="parent_kind_id"/>
+        </table>
+        <!--子表配置-->
+        <table tableName="kind" domainObjectName="Kind">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <oneToOne mappingTable="parent_kind" column="parent_kind_id" joinColumn="id"/>
+            <oneToMany mappingTable="tag" column="id" joinColumn="child_kind_id"/>
+        </table>
+
+        <table tableName="tag" domainObjectName="Tag">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <oneToOne mappingTable="kind" column="child_kind_id" joinColumn="id"/>
+            <oneToMany mappingTable="site_tag" column="id" joinColumn="tag_id"/>
+        </table>
+
+        <table tableName="site_tag" domainObjectName="SiteTag">
+            <generatedKey column="site_id" sqlStatement="MySql" identity="true" />
+            <oneToOne mappingTable="tag" column="id" joinColumn="tag_id"/>
+        </table>
+
+        <table tableName="site" domainObjectName="Site">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <oneToOne mappingTable="site_tag" column="site_id" joinColumn="id"/>
+        </table>
+
+    </context>
+</generatorConfiguration>
