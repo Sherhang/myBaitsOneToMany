@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demoMysql.dao.SiteTagMapper">
   <resultMap id="BaseResultMap" type="com.example.demoMysql.bean.SiteTag">
-    <result column="site_id" jdbcType="BIGINT" property="siteId" />
-    <result column="tag_id" jdbcType="DOUBLE" property="tagId" />
-    <result column="tdw_column" jdbcType="DOUBLE" property="tdwColumn" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.demoMysql.bean.SiteTag">
-    <result column="tdw_table" jdbcType="LONGVARCHAR" property="tdwTable" />
-    <result column="value_extra" jdbcType="LONGVARCHAR" property="valueExtra" />
-    <result column="created_at" jdbcType="LONGVARCHAR" property="createdAt" />
-    <result column="updated_at" jdbcType="LONGVARCHAR" property="updatedAt" />
+    <id column="site_id" jdbcType="INTEGER" property="siteId" />
+    <id column="tag_id" jdbcType="BIGINT" property="tagId" />
+    <result column="val_extra_info" jdbcType="VARCHAR" property="valExtraInfo" />
+    <result column="tdw_table" jdbcType="VARCHAR" property="tdwTable" />
+    <result column="tdw_field" jdbcType="VARCHAR" property="tdwField" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <collection column="tag_id" property="tags" select="getTags" />
+    <collection column="site_id" property="site" select="getSite" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -71,27 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    site_id, tag_id, tdw_column
+    site_id, tag_id, val_extra_info, tdw_table, tdw_field, create_time, update_time
   </sql>
-  <sql id="Blob_Column_List">
-    tdw_table, value_extra, created_at, updated_at
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.example.demoMysql.bean.SiteTagExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from site_tag
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" parameterType="com.example.demoMysql.bean.SiteTagExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -106,6 +87,18 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from site_tag
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from site_tag
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.example.demoMysql.bean.SiteTagExample">
     delete from site_tag
     <if test="_parameter != null">
@@ -113,18 +106,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.example.demoMysql.bean.SiteTag">
-    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Long">
+    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into site_tag (tag_id, tdw_column, tdw_table, 
-      value_extra, created_at, updated_at
+    insert into site_tag (tag_id, val_extra_info, tdw_table, 
+      tdw_field, create_time, update_time
       )
-    values (#{tagId,jdbcType=DOUBLE}, #{tdwColumn,jdbcType=DOUBLE}, #{tdwTable,jdbcType=LONGVARCHAR}, 
-      #{valueExtra,jdbcType=LONGVARCHAR}, #{createdAt,jdbcType=LONGVARCHAR}, #{updatedAt,jdbcType=LONGVARCHAR}
+    values (#{tagId,jdbcType=BIGINT}, #{valExtraInfo,jdbcType=VARCHAR}, #{tdwTable,jdbcType=VARCHAR}, 
+      #{tdwField,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.example.demoMysql.bean.SiteTag">
-    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Long">
+    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into site_tag
@@ -132,40 +125,40 @@
       <if test="tagId != null">
         tag_id,
       </if>
-      <if test="tdwColumn != null">
-        tdw_column,
+      <if test="valExtraInfo != null">
+        val_extra_info,
       </if>
       <if test="tdwTable != null">
         tdw_table,
       </if>
-      <if test="valueExtra != null">
-        value_extra,
+      <if test="tdwField != null">
+        tdw_field,
       </if>
-      <if test="createdAt != null">
-        created_at,
+      <if test="createTime != null">
+        create_time,
       </if>
-      <if test="updatedAt != null">
-        updated_at,
+      <if test="updateTime != null">
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="tagId != null">
-        #{tagId,jdbcType=DOUBLE},
+        #{tagId,jdbcType=BIGINT},
       </if>
-      <if test="tdwColumn != null">
-        #{tdwColumn,jdbcType=DOUBLE},
+      <if test="valExtraInfo != null">
+        #{valExtraInfo,jdbcType=VARCHAR},
       </if>
       <if test="tdwTable != null">
-        #{tdwTable,jdbcType=LONGVARCHAR},
+        #{tdwTable,jdbcType=VARCHAR},
       </if>
-      <if test="valueExtra != null">
-        #{valueExtra,jdbcType=LONGVARCHAR},
+      <if test="tdwField != null">
+        #{tdwField,jdbcType=VARCHAR},
       </if>
-      <if test="createdAt != null">
-        #{createdAt,jdbcType=LONGVARCHAR},
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updatedAt != null">
-        #{updatedAt,jdbcType=LONGVARCHAR},
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -179,51 +172,82 @@
     update site_tag
     <set>
       <if test="record.siteId != null">
-        site_id = #{record.siteId,jdbcType=BIGINT},
+        site_id = #{record.siteId,jdbcType=INTEGER},
       </if>
       <if test="record.tagId != null">
-        tag_id = #{record.tagId,jdbcType=DOUBLE},
+        tag_id = #{record.tagId,jdbcType=BIGINT},
       </if>
-      <if test="record.tdwColumn != null">
-        tdw_column = #{record.tdwColumn,jdbcType=DOUBLE},
+      <if test="record.valExtraInfo != null">
+        val_extra_info = #{record.valExtraInfo,jdbcType=VARCHAR},
       </if>
       <if test="record.tdwTable != null">
-        tdw_table = #{record.tdwTable,jdbcType=LONGVARCHAR},
+        tdw_table = #{record.tdwTable,jdbcType=VARCHAR},
       </if>
-      <if test="record.valueExtra != null">
-        value_extra = #{record.valueExtra,jdbcType=LONGVARCHAR},
+      <if test="record.tdwField != null">
+        tdw_field = #{record.tdwField,jdbcType=VARCHAR},
       </if>
-      <if test="record.createdAt != null">
-        created_at = #{record.createdAt,jdbcType=LONGVARCHAR},
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updatedAt != null">
-        updated_at = #{record.updatedAt,jdbcType=LONGVARCHAR},
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
-    update site_tag
-    set site_id = #{record.siteId,jdbcType=BIGINT},
-      tag_id = #{record.tagId,jdbcType=DOUBLE},
-      tdw_column = #{record.tdwColumn,jdbcType=DOUBLE},
-      tdw_table = #{record.tdwTable,jdbcType=LONGVARCHAR},
-      value_extra = #{record.valueExtra,jdbcType=LONGVARCHAR},
-      created_at = #{record.createdAt,jdbcType=LONGVARCHAR},
-      updated_at = #{record.updatedAt,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByExample" parameterType="map">
     update site_tag
-    set site_id = #{record.siteId,jdbcType=BIGINT},
-      tag_id = #{record.tagId,jdbcType=DOUBLE},
-      tdw_column = #{record.tdwColumn,jdbcType=DOUBLE}
+    set site_id = #{record.siteId,jdbcType=INTEGER},
+      tag_id = #{record.tagId,jdbcType=BIGINT},
+      val_extra_info = #{record.valExtraInfo,jdbcType=VARCHAR},
+      tdw_table = #{record.tdwTable,jdbcType=VARCHAR},
+      tdw_field = #{record.tdwField,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demoMysql.bean.SiteTag">
+    update site_tag
+    <set>
+      <if test="valExtraInfo != null">
+        val_extra_info = #{valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="tdwTable != null">
+        tdw_table = #{tdwTable,jdbcType=VARCHAR},
+      </if>
+      <if test="tdwField != null">
+        tdw_field = #{tdwField,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demoMysql.bean.SiteTag">
+    update site_tag
+    set val_extra_info = #{valExtraInfo,jdbcType=VARCHAR},
+      tdw_table = #{tdwTable,jdbcType=VARCHAR},
+      tdw_field = #{tdwField,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </update>
+  <select id="getTags" resultMap="com.example.demoMysql.dao.TagMapper.BaseResultMap">
+    select tag_id,tag_name,broad_kind_id,detail_kind_id,val_type,val_time_type,
+    default_value,val_extra_info,id_cover_type,demand_list,builder,others,create_time,
+    update_time from tag where tag_id=#{tagId}
+  </select>
+  <select id="getSite" resultMap="com.example.demoMysql.dao.SiteMapper.BaseResultMap">
+    select site_id,platform,create_time,update_time from site where site_id=#{siteId}
+  </select>
 </mapper>

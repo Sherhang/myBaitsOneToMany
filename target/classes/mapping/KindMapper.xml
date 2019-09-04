@@ -7,7 +7,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
-    <collection column="id" property="tags" select="getTags" />
+    <association column="parent_kind_id" property="parentKind" select="getParentKind" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -209,7 +209,7 @@
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getTags" resultMap="com.example.demoMysql.dao.TagMapper.BaseResultMap">
-    select id,tag_name,child_kind_id,detail_id,column_type,time_type,default_value,value_extra,id_support_type,demand_list,builder,others,created_at,updated_at from tag where child_kind_id=#{id} 
+  <select id="getParentKind" resultMap="com.example.demoMysql.dao.ParentKindMapper.BaseResultMap">
+    select id,name,created_at,updated_at from parent_kind where id=#{parentKindId}
   </select>
 </mapper>
