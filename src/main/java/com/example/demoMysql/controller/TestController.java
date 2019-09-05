@@ -118,5 +118,24 @@ public class TestController {
         return json;
     }
 
+    //由 大类 id 查询 tag
+    @RequestMapping(value = "/getTagsByBroadKindId/{id}", method = RequestMethod.GET)
+    public String getTagsByBroadKindId(@PathVariable int id) {
+        List<Tag> ret = demoMysqlService.getTagsByBroadKindId(id);
+        Gson gson = new Gson();
+        String json =  gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+
+    //由 tag查询其子集site_tag。因为有相同tag_id对应不同平台
+    @RequestMapping(value = "/getSiteTagsByTagId/{id}", method = RequestMethod.GET)
+    public String getSiteTagsByTagId(@PathVariable long id) {
+        List<SiteTag> ret = demoMysqlService.getSiteTagsByTagId(id);
+        Gson gson = new Gson();
+        String json =  gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
 }
 

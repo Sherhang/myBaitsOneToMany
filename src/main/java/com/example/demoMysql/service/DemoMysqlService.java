@@ -109,7 +109,7 @@ public class DemoMysqlService {
     }
 
     //--->根据联合键查询
-    //由种类 id 查询 大类
+    //由 种类查询其子集大类
     public List<BroadKind> getBroadKindsByKindId(int kind_id){
         BroadKindExample broadKindExample = new BroadKindExample();
         BroadKindExample.Criteria criteria = broadKindExample.createCriteria();
@@ -117,5 +117,24 @@ public class DemoMysqlService {
         List<BroadKind> ret = broadKindMapper.selectByExample(broadKindExample);
         return ret;
     }
+
+    //由 大类查询其子集查询tags
+    public List<Tag> getTagsByBroadKindId(int broad_kind_id){
+        TagExample tagExample = new TagExample();
+        TagExample.Criteria criteria = tagExample.createCriteria();
+        criteria.andBroadKindIdEqualTo(broad_kind_id);
+        List<Tag> ret = tagMapper.selectByExample(tagExample);
+        return ret;
+    }
+
+    //由 tag查询其子集site_tag。因为有相同tag_id对应不同平台
+    public List<SiteTag> getSiteTagsByTagId(long tag_id){
+        SiteTagExample siteTagExample = new SiteTagExample();
+        SiteTagExample.Criteria criteria = siteTagExample.createCriteria();
+        criteria.andTagIdEqualTo(tag_id);
+        List<SiteTag> ret = siteTagMapper.selectByExample(siteTagExample);
+        return ret;
+    }
+
 
 }
