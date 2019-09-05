@@ -47,15 +47,7 @@
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaClientGenerator>
-<!--        &lt;!&ndash; 父表配置&ndash;&gt;-->
-<!--        <table tableName="category" mapperName="CategoryMapper" domainObjectName="Category">-->
-<!--            <generatedKey column="Id" sqlStatement="MySql"  identity="true"/>-->
-<!--            <oneToMany mappingTable="product" column="categoryId" joinColumn="id"/>-->
-<!--        </table>-->
-<!--        &lt;!&ndash; 子表配置&ndash;&gt;-->
-<!--        <table tableName="product" domainObjectName="Product">-->
-<!--            <generatedKey column="Id" sqlStatement="MySql" identity="true" />-->
-<!--        </table>-->
+
         <table tableName="kind" mapperName="ParentKindMapper" domainObjectName="Kind">
             <generatedKey column="kind_id" sqlStatement="MySql" identity="true" />
             <oneToMany mappingTable="kind" column="kind_id" joinColumn="kind_id"/>
