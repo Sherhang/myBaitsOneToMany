@@ -23,9 +23,9 @@ public interface KindMapper {
     /**
      *  根据主键删除数据库的记录,kind
      *
-     * @param id
+     * @param kindId
      */
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer kindId);
 
     /**
      *  新写入数据库记录,kind
@@ -51,9 +51,9 @@ public interface KindMapper {
     /**
      *  根据指定主键获取一条数据库记录,kind
      *
-     * @param id
+     * @param kindId
      */
-    Kind selectByPrimaryKey(Integer id);
+    Kind selectByPrimaryKey(Integer kindId);
 
     /**
      *  动态根据指定的条件来更新符合条件的数据库记录,kind

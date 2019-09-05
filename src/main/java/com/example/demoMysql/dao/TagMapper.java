@@ -23,9 +23,9 @@ public interface TagMapper {
     /**
      *  根据主键删除数据库的记录,tag
      *
-     * @param id
+     * @param tagId
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Long tagId);
 
     /**
      *  新写入数据库记录,tag
@@ -51,9 +51,9 @@ public interface TagMapper {
     /**
      *  根据指定主键获取一条数据库记录,tag
      *
-     * @param id
+     * @param tagId
      */
-    Tag selectByPrimaryKey(Long id);
+    Tag selectByPrimaryKey(Long tagId);
 
     /**
      *  动态根据指定的条件来更新符合条件的数据库记录,tag

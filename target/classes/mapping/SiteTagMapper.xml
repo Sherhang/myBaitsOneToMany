@@ -9,8 +9,8 @@
     <result column="tdw_field" jdbcType="VARCHAR" property="tdwField" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <collection column="tag_id" property="tags" select="getTags" />
-    <collection column="site_id" property="site" select="getSite" />
+    <association column="site_id" property="site" select="getSite" />
+    <association column="tag_id" property="tag" select="getTag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -242,12 +242,10 @@
     where site_id = #{siteId,jdbcType=INTEGER}
       and tag_id = #{tagId,jdbcType=BIGINT}
   </update>
-  <select id="getTags" resultMap="com.example.demoMysql.dao.TagMapper.BaseResultMap">
-    select tag_id,tag_name,broad_kind_id,detail_kind_id,val_type,val_time_type,
-    default_value,val_extra_info,id_cover_type,demand_list,builder,others,create_time,
-    update_time from tag where tag_id=#{tagId}
-  </select>
   <select id="getSite" resultMap="com.example.demoMysql.dao.SiteMapper.BaseResultMap">
     select site_id,platform,create_time,update_time from site where site_id=#{siteId}
+  </select>
+  <select id="getTag" resultMap="com.example.demoMysql.dao.TagMapper.BaseResultMap">
+    select tag_id,tag_name,broad_kind_id,detail_kind_id,val_type,val_time_type,default_value,val_extra_info,id_cover_type,demand_list,builder,others,create_time,update_time from tag where tag_id=#{tagId}
   </select>
 </mapper>

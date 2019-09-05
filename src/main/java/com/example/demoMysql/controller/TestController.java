@@ -6,11 +6,7 @@ import com.example.demoMysql.dao.TagMapper;
 import com.example.demoMysql.service.DemoMysqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod; // RequestMethod.GET
-import org.springframework.web.bind.annotation.RestController;
-
-import org.springframework.web.bind.annotation.PathVariable; // @PathVariable
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -45,9 +41,40 @@ public class TestController {
         return demoMysqlService.getSites();
     }
 
-    @RequestMapping(path = "/getInfoById/{tag_id}", method = RequestMethod.GET)
-    public String getInfoById(@PathVariable long tag_id) {
-        return demoMysqlService.getInfoById(tag_id);
+    @RequestMapping("/getBroadKinds")
+    public String getBroadKinds() {
+        return demoMysqlService.getBroadKinds();
     }
+
+    @RequestMapping("/getKinds")
+    public String getKinds() {
+        return demoMysqlService.getKinds();
+    }
+
+    @RequestMapping(path = "/getTagById/{tag_id}", method = RequestMethod.GET)
+    public String getTagById(@PathVariable long tag_id) {
+        return demoMysqlService.getTagById(tag_id);
+    }
+
+    @RequestMapping(path = "/getSiteTagById", method = RequestMethod.POST)
+    public String getSiteTagById(@RequestParam int site_id, @RequestParam long tag_id) {
+        return demoMysqlService.getSiteTagById(site_id, tag_id);
+    }
+
+    @RequestMapping(path = "/getSiteById/{id}", method = RequestMethod.GET)
+    public String getSiteById(@PathVariable int id) {
+        return demoMysqlService.getSiteById(id);
+    }
+
+    @RequestMapping(path = "/getBroadKindById/{id}", method = RequestMethod.GET)
+    public String getBroadKindById(@PathVariable int id) {
+        return demoMysqlService.getBroadKindById(id);
+    }
+
+    @RequestMapping(path = "/getKindById/{id}", method = RequestMethod.GET)
+    public String getKindById(@PathVariable int id) {
+        return demoMysqlService.getKindById(id);
+    }
+
 }
 

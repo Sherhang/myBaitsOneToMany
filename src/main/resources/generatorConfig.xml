@@ -48,25 +48,25 @@
             <property name="trimStrings" value="true" />
         </javaClientGenerator>
 
-        <table tableName="kind" mapperName="ParentKindMapper" domainObjectName="Kind">
+        <table tableName="kind"  domainObjectName="Kind">
             <generatedKey column="kind_id" sqlStatement="MySql" identity="true" />
-            <oneToMany mappingTable="kind" column="kind_id" joinColumn="kind_id"/>
         </table>
 
         <table tableName="broad_kind" domainObjectName="BroadKind">
             <generatedKey column="broad_kind_id" sqlStatement="MySql" identity="true" />
-            <oneToMany mappingTable="tag" column="broad_kind_id" joinColumn="broad_kind_id"/>
+            <oneToOne mappingTable="kind" column="kind_id" joinColumn="kind_id"/>
         </table>
 
         <table tableName="tag" domainObjectName="Tag">
-            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <generatedKey column="tag_id" sqlStatement="MySql" identity="true" />
+            <oneToOne mappingTable="broad_kind" column="broad_kind_id" joinColumn="broad_kind_id"/>
         </table>
 
         <table tableName="site_tag" domainObjectName="SiteTag">
             <generatedKey column="site_id" sqlStatement="MySql" identity="true" />
 <!--            <generatedKey column="tag_id" sqlStatement="MySql" identity="true" />-->
             <oneToOne mappingTable="site" column="site_id" joinColumn="site_id"/>
-            <oneToMany mappingTable="tag" column="tag_id" joinColumn="tag_id"/>
+            <oneToOne mappingTable="tag" column="tag_id" joinColumn="tag_id"/>
         </table>
 
         <table tableName="site" domainObjectName="Site">

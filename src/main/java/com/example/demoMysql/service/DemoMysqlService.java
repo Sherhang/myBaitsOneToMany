@@ -20,7 +20,7 @@ public class DemoMysqlService {
     private TagMapper tagMapper;  //这里要和controller里面的名字不一样
 
     @Autowired(required = false)
-    private ParentKindMapper parentKindMapper;
+    private BroadKindMapper broadKindMapper;
 
     @Autowired(required = false)
     private KindMapper kindMapper;
@@ -36,6 +36,7 @@ public class DemoMysqlService {
         return "你是猪吗？";
     }
 
+    //--> 查询整张表
 //    获取tag表
     public String getTags() {
         TagExample tagExample = new TagExample();
@@ -64,14 +65,59 @@ public class DemoMysqlService {
         System.out.println(json);
         return json;
     }
-    //根据tag_id 获取 所有信息
-    public String getInfoById(long tag_id){
+    //获取 broad_kind 表
+    public String getBroadKinds(){
+        BroadKindExample broadKindExample = new BroadKindExample();
+        List<BroadKind> ret = broadKindMapper.selectByExample(broadKindExample);
+        Gson gson = new Gson();
+        String json =  gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+    //获取 kind 表
+    public String getKinds(){
+        KindExample kindExample = new KindExample();
+        List<Kind> ret = kindMapper.selectByExample(kindExample);
+        Gson gson = new Gson();
+        String json =  gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+
+    // 根据主键查询
+    //根据tag_id 获取 tag 表
+    public String getTagById(long tag_id){
         Tag tag = tagMapper.selectByPrimaryKey(tag_id);
         Gson gson = new Gson();
         return gson.toJson(tag);
     }
+    //根据site_id, tag_id 获取site_tag
+    public String getSiteTagById(int site_id, long tag_id){
+        SiteTag siteTag = siteTagMapper.selectByPrimaryKey(site_id, tag_id);
+        Gson gson = new Gson();
+        return gson.toJson(siteTag);
+    }
 
+    //根据 site_id 获取site
+    public String getSiteById(int site_id){
+        Site site = siteMapper.selectByPrimaryKey(site_id);
+        Gson gson = new Gson();
+        return gson.toJson(site);
+    }
 
+    //根据 broad_kind_id 获取 broad_kind
+    public String getBroadKindById(int broad_kind_id){
+        BroadKind broadKind = broadKindMapper.selectByPrimaryKey(broad_kind_id);
+        Gson gson = new Gson();
+        return gson.toJson(broadKind);
+    }
+
+    //根据 kind_id 获取 kind
+    public String getKindById(int kind_id){
+        Kind kind = kindMapper.selectByPrimaryKey(kind_id);
+        Gson gson = new Gson();
+        return gson.toJson(kind);
+    }
 
 
 }
