@@ -107,5 +107,16 @@ public class TestController {
         return gson.toJson(kind);
     }
 
+    //由外键查询
+    //由种类 id 查询 大类
+    @RequestMapping(value = "/getBroadKindsByKindId/{id}", method = RequestMethod.GET)
+    public String getBroadKindsByKindId(@PathVariable int id) {
+        List<BroadKind> ret = demoMysqlService.getBroadKindsByKindId(id);
+        Gson gson = new Gson();
+        String json =  gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+
 }
 
