@@ -16,6 +16,7 @@
     <result column="others" jdbcType="VARCHAR" property="others" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <association column="broad_kind_id" property="broadKind" select="getBroadKind" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -110,23 +111,26 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.example.demoMysql.bean.Tag">
-    insert into tag (tag_id, tag_name, broad_kind_id, 
-      detail_kind_id, val_type, val_time_type, 
-      default_value, val_extra_info, id_cover_type, 
-      demand_list, builder, others, 
-      create_time, update_time)
-    values (#{tagId,jdbcType=BIGINT}, #{tagName,jdbcType=VARCHAR}, #{broadKindId,jdbcType=INTEGER}, 
-      #{detailKindId,jdbcType=INTEGER}, #{valType,jdbcType=INTEGER}, #{valTimeType,jdbcType=INTEGER}, 
-      #{defaultValue,jdbcType=VARCHAR}, #{valExtraInfo,jdbcType=VARCHAR}, #{idCoverType,jdbcType=VARCHAR}, 
-      #{demandList,jdbcType=VARCHAR}, #{builder,jdbcType=VARCHAR}, #{others,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    <selectKey keyProperty="tagId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tag (tag_name, broad_kind_id, detail_kind_id, 
+      val_type, val_time_type, default_value, 
+      val_extra_info, id_cover_type, demand_list, 
+      builder, others, create_time, 
+      update_time)
+    values (#{tagName,jdbcType=VARCHAR}, #{broadKindId,jdbcType=INTEGER}, #{detailKindId,jdbcType=INTEGER}, 
+      #{valType,jdbcType=INTEGER}, #{valTimeType,jdbcType=INTEGER}, #{defaultValue,jdbcType=VARCHAR}, 
+      #{valExtraInfo,jdbcType=VARCHAR}, #{idCoverType,jdbcType=VARCHAR}, #{demandList,jdbcType=VARCHAR}, 
+      #{builder,jdbcType=VARCHAR}, #{others,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.example.demoMysql.bean.Tag">
+    <selectKey keyProperty="tagId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into tag
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="tagId != null">
-        tag_id,
-      </if>
       <if test="tagName != null">
         tag_name,
       </if>
@@ -168,9 +172,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="tagId != null">
-        #{tagId,jdbcType=BIGINT},
-      </if>
       <if test="tagName != null">
         #{tagName,jdbcType=VARCHAR},
       </if>
@@ -350,4 +351,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where tag_id = #{tagId,jdbcType=BIGINT}
   </update>
+  <select id="getBroadKind" resultMap="com.example.demoMysql.dao.BroadKindMapper.BaseResultMap">
+    select broad_kind_id,kind_id,broad_kind_name,create_time,update_time from broad_kind where broad_kind_id=#{broadKindId}
+  </select>
 </mapper>

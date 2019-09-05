@@ -1,4 +1,5 @@
 //DemoMysqlService.java
+//这一层方法返回实体，方便taf调用
 
 package com.example.demoMysql.service;
 
@@ -38,85 +39,78 @@ public class DemoMysqlService {
 
     //--> 查询整张表
 //    获取tag表
-    public String getTags() {
+    public List<Tag> getTags() {
         TagExample tagExample = new TagExample();
         List<Tag> ret = tagMapper.selectByExample(tagExample);
-        Gson gson = new Gson();
-        String json =  gson.toJson(ret);
-        System.out.println(json);
-        return json;
+        return ret;
     }
     //获取site_tag表
-    public String getSiteTags(){
+    public List<SiteTag> getSiteTags(){
         SiteTagExample siteTagExample = new SiteTagExample();
         List<SiteTag> ret = siteTagMapper.selectByExample(siteTagExample);
-        Gson gson = new Gson();
-        String json =  gson.toJson(ret);
-        System.out.println(json);
-        return json;
+        return ret;
     }
 
     //获取site表
-    public String getSites(){
+    public List<Site> getSites(){
         SiteExample siteExample = new SiteExample();
         List<Site> ret = siteMapper.selectByExample(siteExample);
-        Gson gson = new Gson();
-        String json =  gson.toJson(ret);
-        System.out.println(json);
-        return json;
+        return ret;
     }
     //获取 broad_kind 表
-    public String getBroadKinds(){
+    public List<BroadKind> getBroadKinds(){
         BroadKindExample broadKindExample = new BroadKindExample();
         List<BroadKind> ret = broadKindMapper.selectByExample(broadKindExample);
-        Gson gson = new Gson();
-        String json =  gson.toJson(ret);
-        System.out.println(json);
-        return json;
+        return ret;
     }
     //获取 kind 表
-    public String getKinds(){
+    public List<Kind> getKinds(){
         KindExample kindExample = new KindExample();
         List<Kind> ret = kindMapper.selectByExample(kindExample);
-        Gson gson = new Gson();
-        String json =  gson.toJson(ret);
-        System.out.println(json);
-        return json;
+        return ret;
     }
 
-    // 根据主键查询
+    // 根据主键查询表
     //根据tag_id 获取 tag 表
-    public String getTagById(long tag_id){
+    public Tag getTagById(long tag_id){
         Tag tag = tagMapper.selectByPrimaryKey(tag_id);
-        Gson gson = new Gson();
-        return gson.toJson(tag);
+        return tag;
+
     }
     //根据site_id, tag_id 获取site_tag
-    public String getSiteTagById(int site_id, long tag_id){
+    public SiteTag getSiteTagById(int site_id, long tag_id){
         SiteTag siteTag = siteTagMapper.selectByPrimaryKey(site_id, tag_id);
-        Gson gson = new Gson();
-        return gson.toJson(siteTag);
+        return siteTag;
+
     }
 
     //根据 site_id 获取site
-    public String getSiteById(int site_id){
+    public Site getSiteById(int site_id){
         Site site = siteMapper.selectByPrimaryKey(site_id);
-        Gson gson = new Gson();
-        return gson.toJson(site);
+        return site;
+
     }
 
     //根据 broad_kind_id 获取 broad_kind
-    public String getBroadKindById(int broad_kind_id){
+    public BroadKind getBroadKindById(int broad_kind_id){
         BroadKind broadKind = broadKindMapper.selectByPrimaryKey(broad_kind_id);
-        Gson gson = new Gson();
-        return gson.toJson(broadKind);
+        return broadKind;
     }
 
     //根据 kind_id 获取 kind
-    public String getKindById(int kind_id){
+
+
+    @Override
+    public String toString() {
+        return "DemoMysqlService{" +
+                "kindMapper=" + kindMapper +
+                '}';
+    }
+
+    public Kind getKindById(int kind_id){
         Kind kind = kindMapper.selectByPrimaryKey(kind_id);
-        Gson gson = new Gson();
-        return gson.toJson(kind);
+        System.out.println(kind); //com.example.demoMysql.bean.Kind@64dddcb2
+        return kind;
     }
 
 
