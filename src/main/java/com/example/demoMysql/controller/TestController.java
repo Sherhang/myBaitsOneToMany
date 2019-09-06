@@ -176,5 +176,17 @@ public class TestController {
     public boolean addKind(@RequestBody Kind kind) {
         return demoMysqlService.addKind(kind);
     }
+
+    //---> 删除类接口
+    @RequestMapping(value = "delKindById/{id}", method = RequestMethod.GET)
+    public boolean delKindById(@PathVariable int id){
+        return demoMysqlService.delKindById(id);
+    }
+
+    //---> 更新类接口
+    @RequestMapping(value="updateKind", method = RequestMethod.POST)
+    public boolean updateKind(@RequestBody Kind kind){
+        return demoMysqlService.updateKind(kind);
+    }
 }
 

@@ -106,22 +106,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.example.demoMysql.bean.SiteTag">
-    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into site_tag (tag_id, val_extra_info, tdw_table, 
-      tdw_field, create_time, update_time
-      )
-    values (#{tagId,jdbcType=BIGINT}, #{valExtraInfo,jdbcType=VARCHAR}, #{tdwTable,jdbcType=VARCHAR}, 
-      #{tdwField,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into site_tag (site_id, tag_id, val_extra_info, 
+      tdw_table, tdw_field, create_time, 
+      update_time)
+    values (#{siteId,jdbcType=INTEGER}, #{tagId,jdbcType=BIGINT}, #{valExtraInfo,jdbcType=VARCHAR}, 
+      #{tdwTable,jdbcType=VARCHAR}, #{tdwField,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.example.demoMysql.bean.SiteTag">
-    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into site_tag
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="siteId != null">
+        site_id,
+      </if>
       <if test="tagId != null">
         tag_id,
       </if>
@@ -142,6 +139,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="siteId != null">
+        #{siteId,jdbcType=INTEGER},
+      </if>
       <if test="tagId != null">
         #{tagId,jdbcType=BIGINT},
       </if>

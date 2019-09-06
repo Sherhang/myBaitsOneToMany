@@ -177,8 +177,58 @@ public class DemoMysqlService {
     //--->添加类接口
     //添加种类kind
     public boolean addKind(Kind kind) {
-        int ret = kindMapper.insert(kind);
+        //先查询是否存在
+        KindExample kindExample = new KindExample();
+        KindExample.Criteria criteria = kindExample.createCriteria();
+        criteria.andKindIdEqualTo(kind.getKindId());
+        long count = kindMapper.countByExample(kindExample);
+        if (count > 0) {
+            System.out.println("ERROR: duplicate primary_key kind_id! kind_id = " + kind.getKindId());
+            return false;
+        }
+        int ret = kindMapper.insert(kind); //insertSelective也可以
         if (ret != 1) {
+            System.out.println("ERROR: insert failure! kind_id = " + kind.getKindId());
+            return false;
+        }
+        return true;
+    }
+
+    // ---> 删除类接口
+    //根据 kind_id 删除一条 kind 数据
+    public boolean delKindById(int kind_id) {
+        //先查询是否存在
+        KindExample kindExample = new KindExample();
+        KindExample.Criteria criteria = kindExample.createCriteria();
+        criteria.andKindIdEqualTo(kind_id);
+        long count = kindMapper.countByExample(kindExample);
+        if (count == 0) {
+            System.out.println("ERROR: primary_key do not exist! kind_id = " + kind_id);
+            return false;
+        }
+        int ret = kindMapper.deleteByPrimaryKey(kind_id);
+        if (ret != 1) {
+            System.out.println("ERROR: deleate fail! kind_id = " + kind_id);
+            return false;
+        }
+        return true;
+    }
+
+    //---> 更新类接口
+    //更新一条kind数据
+    public boolean updateKind(Kind kind) {
+        //先查询是否存在
+        KindExample kindExample = new KindExample();
+        KindExample.Criteria criteria = kindExample.createCriteria();
+        criteria.andKindIdEqualTo(kind.getKindId());
+        long count = kindMapper.countByExample(kindExample);
+        if (count == 0) {
+            System.out.println("ERROR: primary_key do not exist! kind_id = " + kind.getKindId());
+            return false;
+        }
+        int ret = kindMapper.updateByExample(kind, kindExample);
+        if (ret != 1) {
+            System.out.println("ERROR: update fail! kind_id = " + kind.getKindId());
             return false;
         }
         return true;
