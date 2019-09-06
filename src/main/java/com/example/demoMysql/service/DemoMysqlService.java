@@ -6,6 +6,7 @@ package com.example.demoMysql.service;
 import com.example.demoMysql.bean.TagExample;
 import com.example.demoMysql.dao.*;
 import com.example.demoMysql.bean.*;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +38,17 @@ public class DemoMysqlService {
         return "你是猪吗？";
     }
 
-    //--> 查询整张表
+    //--> 查询接口
     //获取tag表
     public List<Tag> getTags() {
+        TagExample tagExample = new TagExample();
+        List<Tag> ret = tagMapper.selectByExample(tagExample);
+        return ret;
+    }
+
+    //分页查询获取tag表
+    public List<Tag> getTagsByPage(int page_num, int page_size) {
+        PageHelper.startPage(page_num, page_size);
         TagExample tagExample = new TagExample();
         List<Tag> ret = tagMapper.selectByExample(tagExample);
         return ret;
@@ -85,7 +94,6 @@ public class DemoMysqlService {
     public SiteTag getSiteTagById(int site_id, long tag_id) {
         SiteTag siteTag = siteTagMapper.selectByPrimaryKey(site_id, tag_id);
         return siteTag;
-
     }
 
     //根据 site_id 获取site
@@ -109,8 +117,8 @@ public class DemoMysqlService {
     }
 
     //--->根据联合键查询
-    //由 种类查询其子集大类
-    public List<BroadKind> getBroadKindsByKindId(int kind_id){
+    //由 种类 查询其子集大类
+    public List<BroadKind> getBroadKindsByKindId(int kind_id) {
         BroadKindExample broadKindExample = new BroadKindExample();
         BroadKindExample.Criteria criteria = broadKindExample.createCriteria();
         criteria.andKindIdEqualTo(kind_id); //条件筛选
@@ -118,8 +126,29 @@ public class DemoMysqlService {
         return ret;
     }
 
+    //由 种类 查询其子集大类 分页查询
+    public List<BroadKind> getBroadKindsByKindIdByPage(int kind_id, int page_num, int page_size) {
+        PageHelper.startPage(page_num, page_size);
+        BroadKindExample broadKindExample = new BroadKindExample();
+        BroadKindExample.Criteria criteria = broadKindExample.createCriteria();
+        criteria.andKindIdEqualTo(kind_id); //条件筛选
+        List<BroadKind> ret = broadKindMapper.selectByExample(broadKindExample);
+        return ret;
+    }
+
+
     //由 大类查询其子集查询tags
-    public List<Tag> getTagsByBroadKindId(int broad_kind_id){
+    public List<Tag> getTagsByBroadKindId(int broad_kind_id) {
+        TagExample tagExample = new TagExample();
+        TagExample.Criteria criteria = tagExample.createCriteria();
+        criteria.andBroadKindIdEqualTo(broad_kind_id);
+        List<Tag> ret = tagMapper.selectByExample(tagExample);
+        return ret;
+    }
+
+    //由 大类查询其子集查询tags 分页
+    public List<Tag> getTagsByBroadKindIdByPage(int broad_kind_id, int page_num, int page_size) {
+        PageHelper.startPage(page_num, page_size);
         TagExample tagExample = new TagExample();
         TagExample.Criteria criteria = tagExample.createCriteria();
         criteria.andBroadKindIdEqualTo(broad_kind_id);
@@ -128,7 +157,7 @@ public class DemoMysqlService {
     }
 
     //由 tag_id 查询其子集site_tag。因为有相同tag_id对应不同平台
-    public List<SiteTag> getSiteTagsByTagId(long tag_id){
+    public List<SiteTag> getSiteTagsByTagId(long tag_id) {
         SiteTagExample siteTagExample = new SiteTagExample();
         SiteTagExample.Criteria criteria = siteTagExample.createCriteria();
         criteria.andTagIdEqualTo(tag_id);
@@ -137,7 +166,7 @@ public class DemoMysqlService {
     }
 
     //由 平台id查询site_tag表
-    public List<SiteTag> getSiteTagsBySiteId(int site_id){
+    public List<SiteTag> getSiteTagsBySiteId(int site_id) {
         SiteTagExample siteTagExample = new SiteTagExample();
         SiteTagExample.Criteria criteria = siteTagExample.createCriteria();
         criteria.andSiteIdEqualTo(site_id);
@@ -145,5 +174,13 @@ public class DemoMysqlService {
         return ret;
     }
 
-
+    //--->添加类接口
+    //添加种类kind
+    public boolean addKind(Kind kind) {
+        int ret = kindMapper.insert(kind);
+        if (ret != 1) {
+            return false;
+        }
+        return true;
+    }
 }

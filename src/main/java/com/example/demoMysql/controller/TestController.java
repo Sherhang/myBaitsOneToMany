@@ -27,20 +27,33 @@ public class TestController {
         return demoMysqlService.test();
     }
 
+    //查询接口
+
     @RequestMapping("/getTags")
     public String getTags() {
         List<Tag> ret = demoMysqlService.getTags();
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
+
+    //分页查询, page_size=0则获取整张表
+    @RequestMapping(path = "/getTagsByPage", method = RequestMethod.POST)
+    public String getTagsByPage(@RequestParam int page_num, @RequestParam int page_size) {
+        List<Tag> ret = demoMysqlService.getTagsByPage(page_num, page_size);
+        Gson gson = new Gson();
+        String json = gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+
 
     @RequestMapping("/getSiteTags")
     public String getSiteTags() {
         List<SiteTag> ret = demoMysqlService.getSiteTags();
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
@@ -49,7 +62,7 @@ public class TestController {
     public String getSites() {
         List<Site> ret = demoMysqlService.getSites();
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
@@ -58,16 +71,16 @@ public class TestController {
     public String getBroadKinds() {
         List<BroadKind> ret = demoMysqlService.getBroadKinds();
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
 
     @RequestMapping("/getKinds")
     public String getKinds() {
-        List<Kind> ret =  demoMysqlService.getKinds();
+        List<Kind> ret = demoMysqlService.getKinds();
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
@@ -113,7 +126,7 @@ public class TestController {
     public String getBroadKindsByKindId(@PathVariable int id) {
         List<BroadKind> ret = demoMysqlService.getBroadKindsByKindId(id);
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
@@ -123,7 +136,17 @@ public class TestController {
     public String getTagsByBroadKindId(@PathVariable int id) {
         List<Tag> ret = demoMysqlService.getTagsByBroadKindId(id);
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+
+    //由 大类 id 查询 tags, 分页。目前数据不多，用上面的接口就够了。
+    @RequestMapping(value = "/getTagsByBroadKindIdByPage", method = RequestMethod.POST)
+    public String getTagsByBroadKindIdByPage(@RequestParam int id, @RequestParam int page_num, @RequestParam int page_size) {
+        List<Tag> ret = demoMysqlService.getTagsByBroadKindIdByPage(id, page_num, page_size);
+        Gson gson = new Gson();
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
@@ -133,7 +156,7 @@ public class TestController {
     public String getSiteTagsByTagId(@PathVariable long id) {
         List<SiteTag> ret = demoMysqlService.getSiteTagsByTagId(id);
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
@@ -143,10 +166,15 @@ public class TestController {
     public String getSiteTagsBySiteId(@PathVariable int id) {
         List<SiteTag> ret = demoMysqlService.getSiteTagsBySiteId(id);
         Gson gson = new Gson();
-        String json =  gson.toJson(ret);
+        String json = gson.toJson(ret);
         System.out.println(json);
         return json;
     }
 
+    //---> 添加类接口
+    @RequestMapping(value = "addKind", method = RequestMethod.POST)
+    public boolean addKind(@RequestBody Kind kind) {
+        return demoMysqlService.addKind(kind);
+    }
 }
 
