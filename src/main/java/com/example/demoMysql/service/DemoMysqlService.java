@@ -127,7 +127,7 @@ public class DemoMysqlService {
         return ret;
     }
 
-    //由 tag查询其子集site_tag。因为有相同tag_id对应不同平台
+    //由 tag_id 查询其子集site_tag。因为有相同tag_id对应不同平台
     public List<SiteTag> getSiteTagsByTagId(long tag_id){
         SiteTagExample siteTagExample = new SiteTagExample();
         SiteTagExample.Criteria criteria = siteTagExample.createCriteria();
@@ -136,7 +136,14 @@ public class DemoMysqlService {
         return ret;
     }
 
-    //由 site_tag查询其站点名称, 此为一对一,故直接调用上面的getSiteById
+    //由 平台id查询site_tag表
+    public List<SiteTag> getSiteTagsBySiteId(int site_id){
+        SiteTagExample siteTagExample = new SiteTagExample();
+        SiteTagExample.Criteria criteria = siteTagExample.createCriteria();
+        criteria.andSiteIdEqualTo(site_id);
+        List<SiteTag> ret = siteTagMapper.selectByExample(siteTagExample);
+        return ret;
+    }
 
 
 }

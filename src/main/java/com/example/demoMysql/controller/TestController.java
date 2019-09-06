@@ -138,5 +138,15 @@ public class TestController {
         return json;
     }
 
+    //由 site_id 查询site_tag表，获取站点下的所有表数据
+    @RequestMapping(value = "/getSiteTagsBySiteId/{id}", method = RequestMethod.GET)
+    public String getSiteTagsBySiteId(@PathVariable int id) {
+        List<SiteTag> ret = demoMysqlService.getSiteTagsBySiteId(id);
+        Gson gson = new Gson();
+        String json =  gson.toJson(ret);
+        System.out.println(json);
+        return json;
+    }
+
 }
 
