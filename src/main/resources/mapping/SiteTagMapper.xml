@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demoMysql.dao.SiteTagMapper">
+  <resultMap id="BaseResultMap" type="com.example.demoMysql.bean.SiteTag">
+    <id column="site_id" jdbcType="INTEGER" property="siteId" />
+    <id column="tag_id" jdbcType="BIGINT" property="tagId" />
+    <result column="val_extra_info" jdbcType="VARCHAR" property="valExtraInfo" />
+    <result column="tdw_table" jdbcType="VARCHAR" property="tdwTable" />
+    <result column="tdw_field" jdbcType="VARCHAR" property="tdwField" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <association column="site_id" property="site" select="getSite" />
+    <association column="tag_id" property="tag" select="getTag" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    site_id, tag_id, val_extra_info, tdw_table, tdw_field, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.example.demoMysql.bean.SiteTagExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from site_tag
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from site_tag
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from site_tag
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.example.demoMysql.bean.SiteTagExample">
+    delete from site_tag
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.demoMysql.bean.SiteTag">
+    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into site_tag (tag_id, val_extra_info, tdw_table, 
+      tdw_field, create_time, update_time
+      )
+    values (#{tagId,jdbcType=BIGINT}, #{valExtraInfo,jdbcType=VARCHAR}, #{tdwTable,jdbcType=VARCHAR}, 
+      #{tdwField,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demoMysql.bean.SiteTag">
+    <selectKey keyProperty="siteId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into site_tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tagId != null">
+        tag_id,
+      </if>
+      <if test="valExtraInfo != null">
+        val_extra_info,
+      </if>
+      <if test="tdwTable != null">
+        tdw_table,
+      </if>
+      <if test="tdwField != null">
+        tdw_field,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tagId != null">
+        #{tagId,jdbcType=BIGINT},
+      </if>
+      <if test="valExtraInfo != null">
+        #{valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="tdwTable != null">
+        #{tdwTable,jdbcType=VARCHAR},
+      </if>
+      <if test="tdwField != null">
+        #{tdwField,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.demoMysql.bean.SiteTagExample" resultType="java.lang.Long">
+    select count(*) from site_tag
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update site_tag
+    <set>
+      <if test="record.siteId != null">
+        site_id = #{record.siteId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tagId != null">
+        tag_id = #{record.tagId,jdbcType=BIGINT},
+      </if>
+      <if test="record.valExtraInfo != null">
+        val_extra_info = #{record.valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tdwTable != null">
+        tdw_table = #{record.tdwTable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tdwField != null">
+        tdw_field = #{record.tdwField,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update site_tag
+    set site_id = #{record.siteId,jdbcType=INTEGER},
+      tag_id = #{record.tagId,jdbcType=BIGINT},
+      val_extra_info = #{record.valExtraInfo,jdbcType=VARCHAR},
+      tdw_table = #{record.tdwTable,jdbcType=VARCHAR},
+      tdw_field = #{record.tdwField,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demoMysql.bean.SiteTag">
+    update site_tag
+    <set>
+      <if test="valExtraInfo != null">
+        val_extra_info = #{valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="tdwTable != null">
+        tdw_table = #{tdwTable,jdbcType=VARCHAR},
+      </if>
+      <if test="tdwField != null">
+        tdw_field = #{tdwField,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demoMysql.bean.SiteTag">
+    update site_tag
+    set val_extra_info = #{valExtraInfo,jdbcType=VARCHAR},
+      tdw_table = #{tdwTable,jdbcType=VARCHAR},
+      tdw_field = #{tdwField,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where site_id = #{siteId,jdbcType=INTEGER}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </update>
+  <select id="getSite" resultMap="com.example.demoMysql.dao.SiteMapper.BaseResultMap">
+    select site_id,platform,create_time,update_time from site where site_id=#{siteId}
+  </select>
+  <select id="getTag" resultMap="com.example.demoMysql.dao.TagMapper.BaseResultMap">
+    select tag_id,tag_name,broad_kind_id,detail_kind_id,val_type,val_time_type,default_value,val_extra_info,id_cover_type,demand_list,builder,others,create_time,update_time from tag where tag_id=#{tagId}
+  </select>
+</mapper>

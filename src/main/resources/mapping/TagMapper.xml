@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demoMysql.dao.TagMapper">
+  <resultMap id="BaseResultMap" type="com.example.demoMysql.bean.Tag">
+    <id column="tag_id" jdbcType="BIGINT" property="tagId" />
+    <result column="tag_name" jdbcType="VARCHAR" property="tagName" />
+    <result column="broad_kind_id" jdbcType="INTEGER" property="broadKindId" />
+    <result column="detail_kind_id" jdbcType="INTEGER" property="detailKindId" />
+    <result column="val_type" jdbcType="INTEGER" property="valType" />
+    <result column="val_time_type" jdbcType="INTEGER" property="valTimeType" />
+    <result column="default_value" jdbcType="VARCHAR" property="defaultValue" />
+    <result column="val_extra_info" jdbcType="VARCHAR" property="valExtraInfo" />
+    <result column="id_cover_type" jdbcType="VARCHAR" property="idCoverType" />
+    <result column="demand_list" jdbcType="VARCHAR" property="demandList" />
+    <result column="builder" jdbcType="VARCHAR" property="builder" />
+    <result column="others" jdbcType="VARCHAR" property="others" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <association column="broad_kind_id" property="broadKind" select="getBroadKind" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    tag_id, tag_name, broad_kind_id, detail_kind_id, val_type, val_time_type, default_value, 
+    val_extra_info, id_cover_type, demand_list, builder, others, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.example.demoMysql.bean.TagExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tag
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tag
+    where tag_id = #{tagId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tag
+    where tag_id = #{tagId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.example.demoMysql.bean.TagExample">
+    delete from tag
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.demoMysql.bean.Tag">
+    <selectKey keyProperty="tagId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tag (tag_name, broad_kind_id, detail_kind_id, 
+      val_type, val_time_type, default_value, 
+      val_extra_info, id_cover_type, demand_list, 
+      builder, others, create_time, 
+      update_time)
+    values (#{tagName,jdbcType=VARCHAR}, #{broadKindId,jdbcType=INTEGER}, #{detailKindId,jdbcType=INTEGER}, 
+      #{valType,jdbcType=INTEGER}, #{valTimeType,jdbcType=INTEGER}, #{defaultValue,jdbcType=VARCHAR}, 
+      #{valExtraInfo,jdbcType=VARCHAR}, #{idCoverType,jdbcType=VARCHAR}, #{demandList,jdbcType=VARCHAR}, 
+      #{builder,jdbcType=VARCHAR}, #{others,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demoMysql.bean.Tag">
+    <selectKey keyProperty="tagId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tagName != null">
+        tag_name,
+      </if>
+      <if test="broadKindId != null">
+        broad_kind_id,
+      </if>
+      <if test="detailKindId != null">
+        detail_kind_id,
+      </if>
+      <if test="valType != null">
+        val_type,
+      </if>
+      <if test="valTimeType != null">
+        val_time_type,
+      </if>
+      <if test="defaultValue != null">
+        default_value,
+      </if>
+      <if test="valExtraInfo != null">
+        val_extra_info,
+      </if>
+      <if test="idCoverType != null">
+        id_cover_type,
+      </if>
+      <if test="demandList != null">
+        demand_list,
+      </if>
+      <if test="builder != null">
+        builder,
+      </if>
+      <if test="others != null">
+        others,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tagName != null">
+        #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="broadKindId != null">
+        #{broadKindId,jdbcType=INTEGER},
+      </if>
+      <if test="detailKindId != null">
+        #{detailKindId,jdbcType=INTEGER},
+      </if>
+      <if test="valType != null">
+        #{valType,jdbcType=INTEGER},
+      </if>
+      <if test="valTimeType != null">
+        #{valTimeType,jdbcType=INTEGER},
+      </if>
+      <if test="defaultValue != null">
+        #{defaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="valExtraInfo != null">
+        #{valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="idCoverType != null">
+        #{idCoverType,jdbcType=VARCHAR},
+      </if>
+      <if test="demandList != null">
+        #{demandList,jdbcType=VARCHAR},
+      </if>
+      <if test="builder != null">
+        #{builder,jdbcType=VARCHAR},
+      </if>
+      <if test="others != null">
+        #{others,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.demoMysql.bean.TagExample" resultType="java.lang.Long">
+    select count(*) from tag
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tag
+    <set>
+      <if test="record.tagId != null">
+        tag_id = #{record.tagId,jdbcType=BIGINT},
+      </if>
+      <if test="record.tagName != null">
+        tag_name = #{record.tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.broadKindId != null">
+        broad_kind_id = #{record.broadKindId,jdbcType=INTEGER},
+      </if>
+      <if test="record.detailKindId != null">
+        detail_kind_id = #{record.detailKindId,jdbcType=INTEGER},
+      </if>
+      <if test="record.valType != null">
+        val_type = #{record.valType,jdbcType=INTEGER},
+      </if>
+      <if test="record.valTimeType != null">
+        val_time_type = #{record.valTimeType,jdbcType=INTEGER},
+      </if>
+      <if test="record.defaultValue != null">
+        default_value = #{record.defaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.valExtraInfo != null">
+        val_extra_info = #{record.valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idCoverType != null">
+        id_cover_type = #{record.idCoverType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.demandList != null">
+        demand_list = #{record.demandList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.builder != null">
+        builder = #{record.builder,jdbcType=VARCHAR},
+      </if>
+      <if test="record.others != null">
+        others = #{record.others,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tag
+    set tag_id = #{record.tagId,jdbcType=BIGINT},
+      tag_name = #{record.tagName,jdbcType=VARCHAR},
+      broad_kind_id = #{record.broadKindId,jdbcType=INTEGER},
+      detail_kind_id = #{record.detailKindId,jdbcType=INTEGER},
+      val_type = #{record.valType,jdbcType=INTEGER},
+      val_time_type = #{record.valTimeType,jdbcType=INTEGER},
+      default_value = #{record.defaultValue,jdbcType=VARCHAR},
+      val_extra_info = #{record.valExtraInfo,jdbcType=VARCHAR},
+      id_cover_type = #{record.idCoverType,jdbcType=VARCHAR},
+      demand_list = #{record.demandList,jdbcType=VARCHAR},
+      builder = #{record.builder,jdbcType=VARCHAR},
+      others = #{record.others,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demoMysql.bean.Tag">
+    update tag
+    <set>
+      <if test="tagName != null">
+        tag_name = #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="broadKindId != null">
+        broad_kind_id = #{broadKindId,jdbcType=INTEGER},
+      </if>
+      <if test="detailKindId != null">
+        detail_kind_id = #{detailKindId,jdbcType=INTEGER},
+      </if>
+      <if test="valType != null">
+        val_type = #{valType,jdbcType=INTEGER},
+      </if>
+      <if test="valTimeType != null">
+        val_time_type = #{valTimeType,jdbcType=INTEGER},
+      </if>
+      <if test="defaultValue != null">
+        default_value = #{defaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="valExtraInfo != null">
+        val_extra_info = #{valExtraInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="idCoverType != null">
+        id_cover_type = #{idCoverType,jdbcType=VARCHAR},
+      </if>
+      <if test="demandList != null">
+        demand_list = #{demandList,jdbcType=VARCHAR},
+      </if>
+      <if test="builder != null">
+        builder = #{builder,jdbcType=VARCHAR},
+      </if>
+      <if test="others != null">
+        others = #{others,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tag_id = #{tagId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demoMysql.bean.Tag">
+    update tag
+    set tag_name = #{tagName,jdbcType=VARCHAR},
+      broad_kind_id = #{broadKindId,jdbcType=INTEGER},
+      detail_kind_id = #{detailKindId,jdbcType=INTEGER},
+      val_type = #{valType,jdbcType=INTEGER},
+      val_time_type = #{valTimeType,jdbcType=INTEGER},
+      default_value = #{defaultValue,jdbcType=VARCHAR},
+      val_extra_info = #{valExtraInfo,jdbcType=VARCHAR},
+      id_cover_type = #{idCoverType,jdbcType=VARCHAR},
+      demand_list = #{demandList,jdbcType=VARCHAR},
+      builder = #{builder,jdbcType=VARCHAR},
+      others = #{others,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where tag_id = #{tagId,jdbcType=BIGINT}
+  </update>
+  <select id="getBroadKind" resultMap="com.example.demoMysql.dao.BroadKindMapper.BaseResultMap">
+    select broad_kind_id,kind_id,broad_kind_name,create_time,update_time from broad_kind where broad_kind_id=#{broadKindId}
+  </select>
+</mapper>
